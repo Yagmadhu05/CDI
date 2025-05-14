@@ -7,7 +7,12 @@ from PIL import Image
 # Load CSV with color data
 @st.cache_data
 def load_colors():
-    return pd.read_csv("colors.csv")
+    df = pd.read_csv(r"C:\Users\acer 85\Downloads\DS\Hackathon\colors.csv.csv",dtype={"R": int, "G": int, "B": int})
+    df.columns = ['color_name', 'hex', 'R', 'G', 'B']
+    df["R"] = pd.to_numeric(df["R"], errors='coerce')
+    df["G"] = pd.to_numeric(df["G"], errors='coerce')   
+    df["B"] = pd.to_numeric(df["B"], errors='coerce')
+    return df
 
 def get_closest_color(r, g, b, df):
     minimum = float('inf')
@@ -32,10 +37,8 @@ def main():
     uploaded_file = st.file_uploader("Upload an Image", type=["jpg", "png", "jpeg"])
     if uploaded_file:
         image = process_image(uploaded_file)
-        st.image(image, caption="Click to detect color", use_column_width=True)
+        st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        # Get click
-        click = st.image(image, use_column_width=True)
         x = st.slider("X-coordinate", 0, image.shape[1] - 1)
         y = st.slider("Y-coordinate", 0, image.shape[0] - 1)
 
